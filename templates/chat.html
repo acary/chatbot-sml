@@ -3,7 +3,7 @@
 
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
   <meta name="description" content="">
   <meta name="author" content="">
   <!-- <meta http-equiv="refresh" content="30"> -->
@@ -23,8 +23,11 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
-
   <link href="https://fonts.googleapis.com/css?family=Crimson+Text&display=swap" rel="stylesheet">
+
+  <!-- Chatbot specific -->
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script src="{{ url_for('static', filename='messages.js') }}"></script>
 </head>
 
 <body>
@@ -33,36 +36,38 @@
     Welcome to our Chatbot!
   </div>
 
-    <div class="container">
-      <div class="row mt-5">
+  <div class="container">
+
+    <div class="row mt-5"> <!-- Row start -->
+      <div class="col-sm">
+        <h6>Try examples:</h6>
+        <ul>
+          <li>5.9 3.0 5.1 1.8</li>
+          <li>8 3 5.1 2</li>
+        </ul>
       </div>
-      <div class="row">
-        <div class="col-sm">
-          <h3>Try:</h3>
-          <ul>
-            <li>5.9 3.0 5.1 1.8</li>
-          </ul>
+      <div class="col-sm">
+
+        <img class="chatbotImage" src="{{ url_for('static', filename='chatbot.png')}}" style="max-width:100px;" />
+
+        <div class="form-group">
+          <input type="text" class="form-control" id="name" placeholder="name" hidden="true">
         </div>
-        <div class="col-sm">
-          <form action="/predict" method="POST" enctype="multipart/form-data" class="form-inline">
-            <div class="form-group mb-2">
-              <label for="chatting" class="sr-only">Chatting</label>
-              <input type="text" readonly class="form-control-plaintext" id="chatting" value="Chatting...">
-            </div>
-            <div class="form-group mb-2">
-              <label for="input" class="sr-only">Input text</label>
-              <input type="text" class="form-control" name="input" id="input" placeholder="">
-            </div>
-            <button type="submit" class="btn btn-primary mx-2 mb-2">Send</button>
-          </form>
+
+        <div class="form-group">
+          <textarea class="form-control" id="message" cols="30" rows="3" placeholder="What can we help you with?"></textarea>
         </div>
-        <div class="col-sm">
-          {% if data %}
-          <h3>Predicted class: {{ data }}</h3>
-          {% endif %}
-        </div>
+
+        <button class="btn btn-primary" id="submit" onclick="submit_message();">Send</button>
       </div>
-    </div>
+
+      <div class="col-sm">
+        <h6>Classification output:</h6>
+        <div class="mb-3" id="messages"></div>
+      </div>
+    </div> <!-- Row end -->
+
+  </div>
 
 </body>
 
