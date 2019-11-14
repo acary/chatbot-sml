@@ -1,4 +1,4 @@
-# Serve a Machine Learning Model as a Webservice
+# Chatbot application for intent classification
 
 Serving a simple machine learning model as a webservice using [flask](http://flask.pocoo.org/).
 
