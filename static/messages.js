@@ -24,6 +24,7 @@ function submit_message() {
       }
       response.json().then(function(data) {
         console.log(data);
+        document.getElementById('message').value = '';
         document.getElementById('messages').innerText = data;
       });
     })
