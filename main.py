@@ -19,6 +19,14 @@ def load_model():
     with open('iris_trained_model.pkl', 'rb') as f:
         model = pickle.load(f)
 
+def map_classification(y):
+    ''' Map classification code to descriptive value '''
+    class_options = {
+        '0': 'Iris setosa',
+        '1': 'Iris virginica',
+        '2': 'Iris versicolor',
+    }
+    return class_options[y]
 
 @app.errorhandler(404)
 def not_found(error):
@@ -36,22 +44,28 @@ def home():
 def create_entry():
     ''' Process and analyze new entry '''
 
+    # Load model
     load_model()
 
+    # Get request as json
     req = request.get_json()
+    data = req['message'] # Get message field contents
 
-    print(req)
-
-    data = req['message']
+    # Pre-process message
     data = list(data.split(" "))
     data = [float(i) for i in data]
     data = np.array(data)[np.newaxis, :]  # converts shape from (4,) to (1, 4)
-    prediction = model.predict(data)  # runs globally loaded model on the data
+
+    # Get prediction
+    prediction = model.predict(data)
     y = str(prediction[0])
-    print(y)
+    # print(y)
 
-    res = make_response(jsonify(y), 200)
+    # Get value
+    intent = map_classification(y)
 
+    # Send response
+    res = make_response(jsonify(intent), 200)
     return res
 
 
