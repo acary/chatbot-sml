@@ -1,26 +1,18 @@
-html, body {
+html {
+    height: 100%; /* 1. */
+    color: var(--c-text);
+    background-color: var(--c-background);
+}
+body {
     margin: 0px;
-    width: 100vw;
-    height: 100vh;
+    padding-top: 10px;
     font-family: arial;
     overflow-y: auto;
     overflow-x: hidden;
-}
-
-.chatbotImage {
-    margin-top: 40px;
-    width: 15vw;
-}
-
-.chatbotOutput {
-    font-size: 45px;
-}
-
-.chatbotInput {
-    margin-top: 10px;
-    width: 55vw;
-    padding: 20px;
-    font-size: 25px;
+    display: flex; /* 1. */
+    flex-direction: column; /* 1. */
+    min-height: 100%; /* 1. */
+    background-color: var(--c-background);
 }
 
 input,
@@ -34,18 +26,25 @@ img {
 .container{max-width:1170px; margin:auto;}
 img{ max-width:100%;}
 .inbox_people {
-  background: #f8f8f8 none repeat scroll 0 0;
+  /* background: #f8f8f8 none repeat scroll 0 0; */
   float: left;
-  overflow: hidden;
+  overflow: auto;
   width: 40%; border-right:1px solid #c4c4c4;
 }
 .inbox_msg {
   border: 1px solid #c4c4c4;
   clear: both;
-  overflow: hidden;
+  overflow: auto;
 }
-.top_spac{ margin: 20px 0 0;}
+/* .top_spac{ margin: 20px 0 0;} */
 
+/*
+1. Grows the content area to take up all the remaining height
+   inside the body element.
+*/
+.grow {
+  flex-grow: 1; /* 1. */
+}
 
 .recent_heading {float: left; width:40%;}
 .srch_bar {
@@ -70,7 +69,12 @@ img{ max-width:100%;}
 }
 .srch_bar .input-group-addon { margin: 0 0 0 -27px;}
 
-.chat_ib h5{ font-size:15px; color:#464646; margin:0 0 8px 0;}
+.chat_ib h5{
+  font-size:15px;
+  color: var(--c-text);
+  background-color: var(--c-background);
+  margin:0 0 8px 0;
+}
 .chat_ib h5 span{ font-size:13px; float:right;}
 .chat_ib p{ font-size:14px; color:#989898; margin:auto}
 .chat_img {
@@ -89,9 +93,14 @@ img{ max-width:100%;}
   margin: 0;
   padding: 18px 16px 10px;
 }
-.inbox_chat { height: 550px; overflow-y: scroll;}
+.inbox_chat { height: 550px; overflow-y: hidden;}
 
-.active_chat{ background:#ebebeb;}
+.active_chat{
+  /* background:#ebebeb; */
+  color: var(--c-text);
+  background-color: var(--c-background);
+  border-left: 1px solid #c4c4c4;
+}
 
 .incoming_msg_img {
   display: inline-block;
@@ -104,18 +113,18 @@ img{ max-width:100%;}
   width: 92%;
  }
  .received_withd_msg p {
-  background: #ebebeb none repeat scroll 0 0;
+  /* background: #ebebeb none repeat scroll 0 0; */
   border-radius: 3px;
-  color: #646464;
+  color: var(--c-text);
   font-size: 14px;
   margin: 0;
   padding: 5px 10px 5px 12px;
   width: 100%;
 }
 .bot_response {
-  background: #ebebeb none repeat scroll 0 0;
+  /* background: #ebebeb none repeat scroll 0 0; */
   border-radius: 3px;
-  color: #646464;
+  color: var(--c-text);
   font-size: 14px;
   margin: 0;
   padding: 5px 10px 5px 12px;
@@ -135,7 +144,7 @@ img{ max-width:100%;}
 }
 
  .sent_msg p {
-  background: #05728f none repeat scroll 0 0;
+  background: #cc5500 none repeat scroll 0 0;
   border-radius: 3px;
   font-size: 14px;
   margin: 0; color:#fff;
@@ -150,7 +159,7 @@ img{ max-width:100%;}
 .input_msg_write input {
   background: rgba(0, 0, 0, 0) none repeat scroll 0 0;
   border: medium none;
-  color: #4c4c4c;
+  color: var(--c-text);
   font-size: 15px;
   min-height: 48px;
   width: 100%;
@@ -158,7 +167,7 @@ img{ max-width:100%;}
 
 .type_msg {border-top: 1px solid #c4c4c4;position: relative;}
 .msg_send_btn {
-  background: #05728f none repeat scroll 0 0;
+  background: #cc5500 none repeat scroll 0 0;
   border: medium none;
   border-radius: 50%;
   color: #fff;
