@@ -40,6 +40,12 @@ def home():
     return render_template('chat.html')
 
 
+@app.route('/compare')
+def compare():
+    ''' Compare with another model '''
+    return render_template('chatter.html')
+
+
 @app.route("/create-entry", methods=["POST"])
 def create_entry():
     ''' Process and analyze new entry '''
@@ -71,4 +77,4 @@ def create_entry():
 
 if __name__ == '__main__':
 
-    app.run(host='127.0.0.1', port=8080)
+    app.run(host='127.0.0.1', port=8080, debug=True)

@@ -1,0 +1,82 @@
+<div class="container overflow-auto">
+  <h3 class=" text-center">Customer Service Chat</h3>
+  <div class="messaging">
+    <div class="inbox_msg">
+      <div class="inbox_people">
+        <div class="headind_srch">
+          <div class="recent_heading">
+            <h4>Recent</h4>
+          </div>
+
+        </div>
+        <div class="inbox_chat">
+          <div class="chat_list">
+            <div class="chat_people">
+              <div class="chat_img"> <img src="{{ url_for('static', filename='chatbot.png')}}" alt="Agent 1"> </div>
+              <div class="chat_ib">
+                <a href="{{ url_for('home') }}" style="text-decoration: none;">
+                <h5>Agent Smith (General Support)<span class="chat_date">Dec 14</span></h5>
+                <p>Hello, how may we help you today?</p>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <div class="chat_list active_chat">
+            <div class="chat_people">
+              <div class="chat_img"> <img src="{{ url_for('static', filename='chatbot.png')}}" alt="Agent 2"> </div>
+              <div class="chat_ib">
+                <a href="{{ url_for('compare') }}" style="text-decoration: none;">
+                <h5>Agent Fury (Buyer Support)<span class="chat_date">Dec 14</span></h5>
+                <p>Let's see if we can help...</p>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="mesgs">
+        <div class="msg_history">
+
+          <div class="incoming_msg">
+            <div class="incoming_msg_img"> <img src="{{ url_for('static', filename='chatbot.png')}}" alt="Agent"> </div>
+            <div class="received_msg">
+              <div class="received_withd_msg">
+                <p>Let's see if we can help...</p>
+                <span class="time_date"> 11:01 AM | Today</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="outgoing_msg">
+            <div class="sent_msg">
+              <p>8 3 5.1 2</p>
+              <span class="time_date"> 11:01 AM | Today</span>
+            </div>
+          </div>
+
+          <div class="incoming_msg">
+            <div class="incoming_msg_img"> <img src="{{ url_for('static', filename='chatbot.png')}}" alt="Agent"> </div>
+            <div class="received_msg">
+              <div class="received_withd_msg">
+                <p><div class="bot_response" id="messages"><i class="fas fa-spinner"></i></div></p>
+                <span class="time_date"> 11:02 AM | Today</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="type_msg">
+          <div class="input_msg_write">
+            <input type="text" class="form-control" id="name" placeholder="name" hidden="true">
+            <input type="text" id="message" class="write_msg" placeholder="Type a message" onkeydown = "if (event.keyCode == 13)
+                      document.getElementById('msg_send_btn').click()"/>
+            <button id="msg_send_btn" class="msg_send_btn" onclick="submit_message();" type="button"><i class="fa fa-paper-plane-o" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
