@@ -16,7 +16,14 @@ def load_model():
     ''' Load prediction model '''
     global model
     # model variable refers to the global variable
-    with open('iris_trained_model.pkl', 'rb') as f:
+    with open('models/iris_trained_model.pkl', 'rb') as f:
+        model = pickle.load(f)
+
+def load_model_A():
+    ''' Load prediction model '''
+    global model
+    # model variable refers to the global variable
+    with open('models/ulmfit_classifier_model.pkl', 'rb') as f:
         model = pickle.load(f)
 
 def map_classification(y):
