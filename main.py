@@ -1,5 +1,6 @@
 # Serve model as a flask application
-
+import io
+import os
 import pickle
 import numpy as np
 import datetime
@@ -9,21 +10,16 @@ from flask import Flask, request, Flask, render_template, request, jsonify, Blue
 import ast
 import json
 
+from controllers.ulmfit import *
+
 model = None
 app = Flask(__name__)
 
 def load_model():
     ''' Load prediction model '''
     global model
-    # model variable refers to the global variable
+    # `model` variable refers to the global variable
     with open('models/iris_trained_model.pkl', 'rb') as f:
-        model = pickle.load(f)
-
-def load_model_A():
-    ''' Load prediction model '''
-    global model
-    # model variable refers to the global variable
-    with open('models/ulmfit_classifier_model.pkl', 'rb') as f:
         model = pickle.load(f)
 
 def map_classification(y):
@@ -57,6 +53,11 @@ def compare():
 def create_entry():
     ''' Process and analyze new entry '''
 
+    # ULMFit
+    load_ulm_model()
+    uml_predict()
+
+    ### Below is for Iris prediction ###
     # Load model
     load_model()
 
