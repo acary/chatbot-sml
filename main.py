@@ -10,6 +10,9 @@ from flask import Flask, request, Flask, render_template, request, jsonify, Blue
 import ast
 import json
 
+import warnings
+warnings.filterwarnings("ignore")
+
 from controllers.ulmfit import *
 
 model = None

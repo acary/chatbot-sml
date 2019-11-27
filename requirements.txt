@@ -6,3 +6,4 @@ lxml==4.4.1
 google==2.0.2
 beautifulsoup4==4.8.0
 fastai==1.0.59
+google-cloud-storage==1.23.0
