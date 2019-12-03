@@ -13,7 +13,7 @@ import json
 import warnings
 warnings.filterwarnings("ignore")
 
-from controllers.ulmfit import *
+from controllers.cloud import predict_json
 
 model = None
 app = Flask(__name__)
@@ -56,9 +56,12 @@ def compare():
 def create_entry():
     ''' Process and analyze new entry '''
 
-    # ULMFit
-    load_ulm_model()
-    uml_predict()
+    with open('tests/iris_test.json') as data_file:
+        json_request = json.load(data_file)
+
+    my_instance = [json_request]
+    cloud_res = predict_json('chatbot-sml', 'Iris', my_instance)
+    print(cloud_res)
 
     ### Below is for Iris prediction ###
     # Load model
