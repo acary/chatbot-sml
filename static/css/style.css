@@ -19,6 +19,10 @@ body {
   margin-bottom: 20px;
 }
 
+.media_list {
+  max-width: 80px;
+}
+
 h1, h2, h3, h4, h5, h6 {
  font-family: 'Crimson Text', serif;
 }
