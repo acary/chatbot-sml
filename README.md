@@ -21,8 +21,8 @@ Serving a simple machine learning model as a webservice using [flask](http://fla
 3. Ensure your virtual environment is running Python 3.x,
     - verify by running: ```python --version```
 
-### Train model
+### Install requirements and run application
 
-1. Use Model_training.ipynb to train a logistic regression model on the [iris dataset](http://archive.ics.uci.edu/ml/datasets/iris) and generate a pickled model file (iris_trained_model.pkl)
+1. Run: ```pip install -r requirements.txt``` to install requirements
 
 2. Run: ```python main.py``` to serve the model as a REST Web Service
