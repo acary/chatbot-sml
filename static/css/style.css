@@ -6,13 +6,21 @@ html {
 body {
     margin: 0px;
     padding-top: 10px;
-    font-family: arial;
+    font-family: 'Work Sans', sans-serif;
     overflow-y: auto;
     overflow-x: hidden;
     display: flex; /* 1. */
     flex-direction: column; /* 1. */
     min-height: 100%; /* 1. */
     background-color: var(--c-background);
+}
+
+.navbar {
+  margin-bottom: 20px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+ font-family: 'Crimson Text', serif;
 }
 
 input,

@@ -4,14 +4,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="description" content="">
-  <meta name="author" content="">
-  <!-- <meta http-equiv="refresh" content="30"> -->
+  <meta name="description" content="A chatbot that infers the intent of a financial services inquiry.">
+  <meta name="keywords" content="chatbot, fastai, machine learning">
+  <meta name="author" content="Andy Cary, Bhargavi Karthik, Rajkumar Sengottuvel">
 
   <title>
-    Chatbot
+    Chatbot - Customer Service
   </title>
 
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
   <!-- Bootstrap -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
@@ -23,25 +24,29 @@
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css">
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/v4-shims.css">
-  <link href="https://fonts.googleapis.com/css?family=Crimson+Text&display=swap" rel="stylesheet">
 
   <!-- Chatbot specific -->
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
   <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/dark.css') }}">
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/blog.css') }}">
   <script src="{{ url_for('static', filename='js/messages.js') }}"></script>
   <script src="{{ url_for('static', filename='js/dark.js') }}"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Crimson+Text|Work+Sans:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Crimson+Text&display=swap" rel="stylesheet">
 
 </head>
 
 <body>
 
-    <input id="dark-mode" class="dark-mode-checkbox visually-hidden" type="checkbox">
-    <div class="theme-container grow">
-      {% block content %}{% endblock %}
+  <input id="dark-mode" class="dark-mode-checkbox visually-hidden" type="checkbox">
+  <div class="theme-container grow">
+    <div class="container">
+      {% include 'nav_bar.html' %}
     </div>
+    {% block content %}{% endblock %}
+  </div>
 
-    <!-- <div id="firebaseui-auth-container"></div>
-  <div id="login-info" hidden=true></div> -->
 
 </body>
 

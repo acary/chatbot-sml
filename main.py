@@ -43,6 +43,18 @@ def not_found(error):
 @app.route('/')
 def home():
     ''' Main entrypoint '''
+    return render_template('report.html')
+
+
+@app.route('/blog')
+def report():
+    ''' Blog post report '''
+    return render_template('report.html')
+
+
+@app.route('/iris')
+def iris_demo():
+    ''' Iris demo '''
     return render_template('chat.html')
 
 
