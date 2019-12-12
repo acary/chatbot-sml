@@ -5,15 +5,41 @@
     <div class="blog-post">
 
       <h2>Improving Out-of-scope Accuracy</h2>
-
-      <p>Chatbots are widely becoming adopted by businesses in sectors such as Banking and Financial Services and Real Estate to automate and scale customer service areas that previously required live agents to support.<p>
-
-      <p>The automated detection and calibrated response to real-time customer queries can have an enormous financial impact in terms of revenue (i.e. lead generation, sales and marketing optimization) and cost savings (agent headcount,
-        customer
-        retention) when trained and deployed effectively.</p>
-
-      <p>The Machine Learning (ML) sub-field of Natural Language Processing (NLP) and within it, Intent Classification, provides tools and techniques to create effective and highly accurate customer response and routing workflows that can
-        benefit business organizations.</p>
+      <ol class="list-unstyled">
+        <li><h4>Motivation</h4></li
+        <p>To understand why out-of-scope accuracy of such a classifier is important, let us consider a practical scenario wherein a chatbot is built for a banking application. The chatbot typically interacts with customers, identifies the intent of their queries and redirects them to the appropriate human representatives. Imagine how much time would be wasted for the customers and the bank representatives, if this system fails to identify the out-of-scope queries and keeps redirecting the customers to wrong representatives.</p>
+        <p>For the intent classifier model that we built using the ULMFiT technique using a curated Banking & Insurance domain specific dataset, recall that the accuracy of the model in identifying out-of-scope queries was significantly bad in comparison to the in-scope accuracy. The out-of-scope accuracy of the model turned out to be less than 50%. If such a model is deployed as the backend of the above mentioned chatbot application, one can imagine the trouble that is to be caused. Our results clearly correlated with the previous evaluations done by Stefan et al. (2019). Also, in their work Stefan et al., tried three different approaches to improve out-of-scope accuracy. Based on their research, the authors concluded that – “models that incorporate more out-of-scope training data tend to improve on out-of-scope performance”, and also, they call out that – “such data is expensive and difficult to generate”. In the rest of this section, we will understand the root cause of why such NLP models have low accuracy on out-of-scope queries and further propose a novel methodology to solve this problem.</p>
+        <li><h4>Methodology</h4></li>
+        <p>To understand this problem further, let us consider the following out-of-scope query that was wrongly classified by the classifier model as the intent ‘bill_due’ with a probability of 0.64:</p>
+        <img src="{{ url_for('static', filename='img/oos_1.png')}}" alt="oos">
+        <p></p>
+        <p>If we take a close look at this query, we can see that though this query has the word bill, it is clearly in a different context compared to our target class “bill_due”. The reason for this wrong classification could be either because the pretrained language model missed to discern between multiple contexts for the word “bill” or that it did discern, but there was a catastrophic forgetting introduced by the fine-tuning phase. To understand this further, we did a simple experiment where we trained a separate intent classifier model where we did not use the step for fine tuning the language model using our target corpus and built the classifier directly on top of the language model pre-trained on Wikitext-103 dataset. When tested, this model had a better out-of-scope accuracy of about 53% compared to the 46.67% accuracy of the originally trained model.</p>
+        <p>This result proves the fact that the original model lost some of the context information due to catastrophic forgetting that happened during the fine-tuning phase. Hence, these models wrongly classify queries that are out-of-scope as in-scope just because they see some of the domain specific keywords in the query without discerning the context in which the word appears. Thus, the classifier built on top of the original pretrained language model did better in identifying those out-of-scope queries.</p>
+        <p>One other contributor to the inaccuracy in classifying out-of-scope queries could be from the fact that even if the language model had the smarts to discern between multiple contexts associated with domain specific keywords (like “bill”), it may have mapped multiple of these contexts to the wrong intent class in the last 2 layers of our model due to inadequate domain specific out-of-scope data to train on. The obvious answer to solve both of the aforementioned issues is to add more queries to the training data for the out-of-scope class. Techniques like crowd-sourcing and manual data generation can be practical for in-scope target intents, but the task of finding all the different contexts for domain specific keywords that are out-of-scope can be quite tedious when done manually. Since we already have a generative language model that has been trained on a large corpus of general data, that has semantic knowledge about the various contexts for domain specific keywords (like “bill”), this model can be repurposed to also generate the target queries that can be further classified into the respective out-of-scope and in-scope intents with minimal human supervision. To identify these domain specific keywords, we can take hints from the intent names or as direct input for each intent from the chatbot designers.</p>
+        <p>Algorithm to improve out-of-scope accuracy:</p>
+        <ol>
+          <li>For each in-scope intent, tokenize the intent names to identify domain specific keywords. (bill, interest, credit etc.)</li>
+          <li>For each of these keywords, prepend it with preidentified mono, bi and trigram query starters (What is, How many etc.)</li>
+          <li>Use the generational model to generate queries with N words for each of the identified strings from step 2 as the starter string</li>
+          <li>Get the probability for the generated query from the model and use a threshold to automatically prune malformed queries</li>
+          <li>For each of these generated queries, use human intervention or techniques like crowd sourcing to classify them as out-of-scope or into in-scope target intents</li>
+          <li>Use the augmented data to train the final classifier</li>
+        </ol>
+        <p></p>
+        <li><h4>Evaluation</h4></li
+        <p>Using the out-of-scope accuracy of 46.67% achieved using ULMFIT as the baseline, we used the aforementioned methodology to augment this data further and evaluate the improvement. For the data generation, we chose to use the talk to transformers model (https://talktotransformer.com/) instead of our pretrained language model owing to better generational accuracy. Since we did not have probability information for the generated queries, we restricted the number of queries using a top-K approach. In this process, we generated 50 extra out-of-scope queries and augmented this to the original data set. In addition to this, we also manually curated a different set of out-of-scope queries by looking at the wrong classifications to provide an upper limit on the potential improvement that can be achieved using our methodology.</p>
+        <p>For the manual effort, we identified some of the prominent keywords that made the model classify a query as in-scope. For example, the dataset has three intents namely bill_due, bill_balance and pay_bill. The queries that can be classified as these intents have keywords like bill, balance, amount, due, deadline, pay, date etc., that the model looks for. We came up with queries that consisted of these keywords, but in different contexts. Some example out-of-scope queries that we created that consisted the word ‘bill’ are:</p>
+        <ol>
+          <li>Is the bill on my name?</li>
+          <li>How can you get a bill to be cancelled?</li>
+          <li>What is the procedure for making a bill into law?</li>
+          <li>What is the meaning of bill?</li>
+        </ol>
+        <p></p>
+        <p>Also, it is important to note that not all of these keywords were misleading. The idea was to find only those misleading keywords and come up with queries that contain them and yet be classified as out-of-scope. This additional out-of-scope dataset that was manually curated consisted of 75 queries in total. We used the manually augmented dataset and the semi-automatically augmented datasets as input to the classifier model. The out-of-scope accuracy upon using the semi-automatically augmented dataset increased to 73.33% from 46.67% (original dataset). The model trained on manually curated dataset achieved an accuracy of  86.67%.</p>
+        <p>Below is the example showing the new model correctly classifying the out-of-scope query with a high probability of 0.97.</p>
+        <img src="{{ url_for('static', filename='img/oos_2.png')}}" alt="oos">
+      </ol>
     </div><!-- /.media_list -->
 
   </div><!-- /.blog-main -->
