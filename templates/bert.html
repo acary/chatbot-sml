@@ -4,16 +4,83 @@
 
     <div class="blog-post">
 
-      <h2>BERT</h2>
+      <h2 id="bert">BERT</h2>
+       <h3 id="bert-overview">Overview</h3>
 
-      <p>Chatbots are widely becoming adopted by businesses in sectors such as Banking and Financial Services and Real Estate to automate and scale customer service areas that previously required live agents to support.<p>
+      <p>Bidirectional Encoder Representations from Transformers (BERT) is an attention based transformer approach that provides state-of-the-art pre-trained models for downstream tasks in Natural Language Processing (NLP) like intent classification. Transformer networks are built using attention-based learning techniques where it gathers information about the relevant context of a given word, and then encodes that context in a rich vector that represents the word. BERT’s key technique is applying bi-directional training of transformer attention model as opposed to the previous models which looks at a text sequence in one direction (left to right) or combined left to right and right to left for training. <p>
+      <br>
+       <h3 id="bert-architecture">Architecture</h3>
 
-      <p>The automated detection and calibrated response to real-time customer queries can have an enormous financial impact in terms of revenue (i.e. lead generation, sales and marketing optimization) and cost savings (agent headcount,
-        customer
-        retention) when trained and deployed effectively.</p>
+        <p>Context-free models such as word2vec generate a single word embedding representation for each word in the vocabulary so the word “bank” will have the same representation in “bank deposit” and “river bank”. However, Contextual models like BERT generate representations of each word in a sentence based on the other words in the sentence.  To explain this further let’s look into the following sentence;
+<p>
+        <p>“I made a bank deposit”</p>
 
-      <p>The Machine Learning (ML) sub-field of Natural Language Processing (NLP) and within it, Intent Classification, provides tools and techniques to create effective and highly accurate customer response and routing workflows that can
-        benefit business organizations.</p>
+        <p>The unidirectional models (left to right) the representation of the word “bank” is based on the words before it i.e. “I made a” and not the word “deposit” that comes after it. However, BERT represents the word “bank” using both its left and right context — I made a ... deposit —, hence its bidirectional.</p>
+
+        <p>BERT uses the following approaches to pre-train;</p>
+         <ul>
+             <li>To build bi-directional word representations it masks out 15% of the words in the input and then only predicts the masked words. For example;</li>
+             <br>
+             <p><code>Input: transfer ten [MASK1] from my wells fargo [MASK2]<br>
+                Labels: [MASK1] = dollars; [MASK2] = account</code>
+            </p>
+            <li>Inorder to learn the relationship between sentences, it trains on a simple task in which given two sentences A and B, predicting whether B is the next sentence after A or not. For example;</li>
+             <br>
+             <p><code>Sentence A: the man went to the bank.<br>
+                Sentence B: he deposited ten dollars into his account.<br>
+                Label: IsNextSentence</code><br> <br>
+
+                <code>Sentence A: the man went to the bank.<br>
+                Sentence B: penguins are flightless.<br>
+                Label: NotNextSentence</code></p>
+         </ul>
+        <br>
+
+        <h3 id="bert-approach">Our approach</h3>
+
+        <p>The BERT team has released several models out of which we have used “BERT-BASE, uncased” model which has 12-layer, 768-hidden, 12-heads, 110M parameters. Uncased means that the text has been converted to lowercase before WordPiece tokenization.</p>
+
+        <p>In our work, we adopted the usage of pre-trained BERT models and transfer learning concepts explained in this <a href="https://arxiv.org/pdf/1810.04805.pdf" target="_blank">paper</a> from Google AI Language. The BERT model was pre-trained using English Wikipedia (2,500M words)  and BooksCorpus (800M words). BooksCorpus is a large corpus of books dataset gathered and used in this <a href="https://arxiv.org/pdf/1506.06724.pdf" target="_blank">paper</a>.</p>
+
+        <p>We have used simpletransformers a library built on top of huggingface transformers library to build a multi class intent classification on the banking domain dataset.</p>
+        <br>
+
+        <h3 id="bert-data-preprocessing">Data Pre-processing</h3>
+        <p>We have extracted the banking domain related data for our intent classification task from the dataset mentioned in this paper - <a href="https://arxiv.org/pdf/1909.02027.pdf" target="_blank">An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction</a>. This dataset contains 150 intents ranging across various domains, each intent consists of 100 training records, 20 validation records and 30 test records, all present in a single csv file. From this we used (data_pre_processing.ipynb) to extract the banking related intents into train.csv, val.csv and test.csv files. We also provided numeric coding mapping for each of the intents which is required for the BERT model.</p>
+
+        <h3 id="bert-model-training">Training</h3>
+        <p>For training the BERT model, we extracted 10 intents from the pre-processed dataset with each intent containing 100 records. The train.csv file has two columns viz. “text” column containing the text that need to be classified and “labels” column containing the numbers (0-9) that corresponds to each of the intents that text belongs as shown in the screenshot below;</p>
+        <div class="text-center">
+        <img src="{{ url_for('static', filename='img/BERT_training_dataset.jpg')}}" alt="BERT training dataset">
+        </div>
+        <br>
+
+        <h3 id="bert-model-tuning">Tuning</h3>
+        <p>We used a max sequence length of 128 for the input text with a training batch size of 5 and 4 epochs.</p>
+        <div class="text-center">
+        <img src="{{ url_for('static', filename='img/BERT_training_tuning.jpg')}}" alt="BERT tuning">
+        </div>
+
+        <br>
+        <h3 id="bert-results">Results</h3>
+        <p>The model did pretty well on the 300 records of the test set predicting correct classes for 291 records that is 97% accuracy. The screenshot below shows some of the correct and incorrect classifications</p>
+        <h5>Correct predictions</h5>
+        <div class="text-center">
+        <img src="{{ url_for('static', filename='img/BERT_correct_predictions.jpg')}}" alt="BERT correct predictions">
+        </div>
+        <br>
+        <h5>Incorrect predictions</h5>
+        <div class="text-center">
+        <img src="{{ url_for('static', filename='img/BERT_incorrect_predictions.jpg')}}" alt="BERT incorrect predictions">
+        </div>
+        <br>
+        <h3 id="bert-references">References</h3>
+        <ul>
+            <li>https://github.com/google-research/bert</li>
+            <li>https://pypi.org/project/simpletransformers/</li>
+            <li>https://github.com/huggingface/transformers</li>
+        </ul>
+
     </div><!-- /.media_list -->
 
   </div><!-- /.blog-main -->
@@ -26,9 +93,14 @@
     <div class="sidebar-module">
       <h4>Section</h4>
       <ol class="list-unstyled">
-        <li><a href="#">Data set</a></li>
-        <li><a href="#">Data preparation</a></li>
-        <li><a href="#">Results</a></li>
+        <li><a href="#bert-overview">Overview</a></li>
+        <li><a href="#bert-architecture">Architecture</a></li>
+        <li><a href="#bert-approach">Our approach</a></li>
+        <li><a href="#bert-data-preprocessing">Data Pre-processing</a></li>
+        <li><a href="#bert-model-training">Training</a></li>
+        <li><a href="#bert-model-tuning">Tuning</a></li>
+        <li><a href="#bert-results">Results</a></li>
+        <li><a href="#bert-references">References</a></li>
       </ol>
     </div>
     <div class="sidebar-module">
