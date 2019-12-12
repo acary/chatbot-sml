@@ -4,16 +4,54 @@
 
     <div class="blog-post">
 
-      <h2>ULMFit</h2>
+      <h2>ULMFiT</h2>
 
-      <p>Chatbots are widely becoming adopted by businesses in sectors such as Banking and Financial Services and Real Estate to automate and scale customer service areas that previously required live agents to support.<p>
-
-      <p>The automated detection and calibrated response to real-time customer queries can have an enormous financial impact in terms of revenue (i.e. lead generation, sales and marketing optimization) and cost savings (agent headcount,
-        customer
-        retention) when trained and deployed effectively.</p>
-
-      <p>The Machine Learning (ML) sub-field of Natural Language Processing (NLP) and within it, Intent Classification, provides tools and techniques to create effective and highly accurate customer response and routing workflows that can
-        benefit business organizations.</p>
+      <ol class="list-unstyled">
+        <li><h4>Overview</h4></li>
+        <p>Fast AI’s Universal Language Model FIne-Tuning (ULMFiT), is a popular transfer learning technique in the field of Natural Language Processing (NLP) that can be used to perform NLP related tasks such as text generation, sentiment analysis and intent classification. In general, training a model on large datasets can be very expensive in terms of time and compute resources. ULMFiT provides a way to overcome this challenge by offering a base model that is built on a significantly large dataset. Further, a NLP task based model can be built on top of this base model, by transfer learning the parameters of the underlying neural network and quickly training on a domain specific dataset of choice. <p>
+        <p> The basic idea behind the ULMFiT algorithm is as follows:</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_methodology.png')}}" alt="ulmfit">
+        <ol class="list-unstyled">
+          <li><h5>Language Model Pre-Training</h5></li>
+          <p>Create a language model that predicts the next word of a given sentence by using a pretrained language model that is trained on a large corpus. In the case of ULMFiT, the large corpus is ‘WikiText-103’ which contains a pre-processed subset of 103 million tokens that were extracted from Wikipedia. It contains about 267,735 unique words. The purpose behind this step is to start with a model that recognizes English language and understands what the language describes.</p>
+          <li><h5>Language Model Fine-Tuning</h5></li>
+          <p>Further, fine tune the language model using a target corpus. In our case we used a Banking and Insurance domain based intent classification dataset as the target corpus. By performing a self-supervised learning using the domain specific dataset, the language model also learns how intent based queries are formed in the specific domain.</p>
+          <li><h5>Target Intent Classification</h5></li>
+          <p>From the fine-tuned language model, extract the encoder and then add a text classifier on top of it. And finally, fine tune this classification model to achieve the desired intent classification.</p>
+        </ol>
+        <li><h4>Data Preparation</h4></li>
+        <p>The Banking & Insurance domain specific intent classification dataset was curated by manually perusing through the large crowdsourced data collection put together by Stefan et al. (2019) in their work and selecting only those query and intent combinations that come under the Banking and Insurance domain. The final dataset consisted of 35 intents including a separate class for out-of-scope queries. The out-of-scope queries are those that cannot be classified under any of the other existing intents. The idea of including out-of-scope queries into the dataset was also based on the work of Stefan et al. (2019) [3].</p>
+        <p>The dataset consists of 6300 queries in total, classified across 35 intents. Out of the 6325 queries, 5000 queries were used for training, 1125 queries were used for validation and 200 queries were used for testing. The training dataset was composed by randomly selecting 115 queries from each intent type and selecting 1090 queries from the out-of-scope class. The validation dataset was composed by randomly selecting 30 queries for each intent type and 105 queries for the out-of-scope class. The test dataset was composed by randomly selecting 5 queries from each intent type and 30 queries from the out-of-scope class.</p>
+        <li><h4>Language Model Training & Tuning</h4></li>
+        <p>We start the training by importing the required libraries from Fast ai. The data in the CSV file is read and stored as a data class ‘TextDataBunch’, using the API’s provided by the fast.ai library. Further, a language model specific data bunch is created using the ‘TextLMDataBunch’ class with a batch size of 32. All the required pre-processing of text happens under the hood while creating the data bunch. Data is encoded by fast.ai in the form of tokens or tags. This process is called tokenization. All parts of the text including words, punctuations etc. are assigned a separate token. Next step is numericalization, where all the unique tokens are identified, and a list of these tokens are created. This list is referred to as the vocabulary. The tokens in the data are then replaced with the ID or location of where the specific token appears in the vocabulary.<p>
+        <img src="{{ url_for('static', filename='img/ulmfit_1.png')}}" alt="ulmfit">
+        <p>Further, we create the language model using the language_model_learner(). This will create an RNN (Recurrent Neural Network) behind the scenes. Also, while creating the model, we start with the pretrained model (WikiText-103) and transfer learn instead of starting with some random weights. While creating the learner, we pass the language model specific data bunch, information about the type of pretrained model that we want to use and set the dropout value to 0.3. The dropout is a hyper-parameter used for regularization. The dropout value should be reduced if the model is underfitting and increased if overfitting.</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_2.png')}}" alt="ulmfit">
+        <p></p>
+        <p>In order to fine tune the model, the optimum learning rate is identified using lr_find(). This fast.ai utility finds the best rate by searching through a series of learning rates. The plot for different learning rates perused, against loss can be visualized using recorder.plot(). From this plot we identify the learning rate for which the loss is at minimum. And, as a best practice this learning rate value is always reduced by a single magnitude and then set as the optimum value. In our case, the learning rate that had the lowest loss was 1e+00 and hence the optimum learning rate was set to 1e-01.</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_3.png')}}" alt="ulmfit">
+        <p></p>
+        <p>After finding the optimum learning rate, we start training the model using fit_one_cycle(). The idea of using fit_one_cycle() which uses the one cycle policy callback instead of fit() has proven to be much faster and produce better results based on work published in this paper. For a single epoch, we got an accuracy of about 38%. We have only trained and fine-tuned the last layer. Now, we unfreeze all the layers and the train using unfreeze() and fit_one_cycle() with an epoch value of 10. The accuracy of the model increased to 43.6%, which is pretty good considering the domain specific nature of the dataset. We now test the language model by providing it with a few starting words of a domain specific query, specifying the total number of words and then asking it to predict.</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_4.png')}}" alt="ulmfit">
+        <p></p>
+        <p>The model does a reasonably good job in coming up with something that looks like a query in the banking or insurance domain. Since our final goal is not to build a text generation model but a classifier, this is acceptable.</p>
+        <li><h4>Classifier Training & Tuning</h4></li>
+        <p>We now build our intent classification model using the curated data set. The primary step is to save the encoder of the language model, which is a segment of the model that actually understands the structure of a sentence. Then we create a classification specific data bunch using ‘TextClasDataBunch’ and by passing the vocabulary that was created while building the language model. Next, we create the learner for the text classifier using the text_classifier_learner(). We pass the classification specific data bunch to the learner along with the setting the dropout value to 0.5. Also, the encoder saved from the language model is loaded as the pre-trained model.</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_5.png')}}" alt="ulmfit">
+        <p></p>
+        <p>We then fine tune the model by finding the optimum learning rate hyper parameter that minimizes the loss using lr_find() and recorder.plot(). The optimum learning rate value in the case of the classifier was found to be 2e-2. Finally, we train the classifier using the optimum learning rate value for 10 epochs and get an accuracy of about 92%. This was achieved within a training time of slightly less than a minute. Also, while training we set the momentums to 0.8 and 0.7. When the learning rate is smaller, we want to go faster in the same direction. However, when the learning rate is higher, in order to not overshoot, we reduce the momentum slightly.</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_6.png')}}" alt="ulmfit">
+        <p></p>
+        <p>We now have a pretty good model, but we want to fine tune it further. Instead of unfreezing all the layers at once, for text classification it is found to be helpful to unfreeze few layers one after another. Hence, we unfreeze the last two layers using freeze_to(-2) and train it again for a single epoch with momentums same as earlier. We use discriminative learning rates for this training, and this is done using slice(1e-2/(2.6**4),1e-2). This indicates that first layer’s learning rate is 1e-2/(2.6**4) and last layer’s learning rate is 1e-2 and the learning rate for the rest of the layers are geometrically evenly spaced. As we move from layer to layer, it has been found (by the founders of fast.ai) that for NLP RNN’s, decreasing the learning rate by 2.6 is effective.</p>
+        <p>After the first level of fine-tuning the accuracy increased to 92.6%. We repeat the same process by unfreezing one more layer and then finally unfreezing all the layers. The number of epochs and learning rate are set accordingly. The final training accuracy for the classification model is 95.5%.</p>
+        <li><h4>Results</h4></li>
+        <p>Preliminary testing of the intent classifier model trained using ULMFiT showed that the model classified the queries provided correctly.</p>
+        <img src="{{ url_for('static', filename='img/ulmfit_7.png')}}" alt="ulmfit">
+        <p></p>
+        <p>The test dataset was separated into in-scope and out-of-scope queries and passed to the model to make predictions. The accuracy of the model was calculated as follows:</p>
+        <p>Accuracy (in %) = (Number of correct predictions / Number of total predictions) * 100</p>
+        <p>The in-scope accuracy of the model on the test set was 92.94% and the out-of-scope accuracy was 46.67%.</p>
+      </ol>
     </div><!-- /.media_list -->
 
   </div><!-- /.blog-main -->
