@@ -1,19 +1,40 @@
 <div class="row">
 
   <div class="col-sm-8 blog-main">
-
+    <a name="deployment"></a>
     <div class="blog-post">
 
-      <h2>Deploying the Model</h2>
+      <h2>Deploying the Model (to the Cloud!)</h2>
 
-      <p>Chatbots are widely becoming adopted by businesses in sectors such as Banking and Financial Services and Real Estate to automate and scale customer service areas that previously required live agents to support.<p>
+      <p>We used Python-based application frameworks (Starlette and Flask) with a Bootstrap frontend to implement the chatbot user interface. Our <a href="https://chatbotfastai.appspot.com" target="_blank">demo</a> serves a Fast.ai/PyTorch model using the Starlette.io framework on the Google App Engine - Flexible infrastructure. Our <a href="/iris">initial version</a> serves a pre-trained Scikit-Learn model using the Flask framework (and also hosts this blog).</p>
 
-      <p>The automated detection and calibrated response to real-time customer queries can have an enormous financial impact in terms of revenue (i.e. lead generation, sales and marketing optimization) and cost savings (agent headcount,
-        customer
-        retention) when trained and deployed effectively.</p>
+      <a name="deploy_challenges">
+      <p>We found interesting challenges with:</p>
 
-      <p>The Machine Learning (ML) sub-field of Natural Language Processing (NLP) and within it, Intent Classification, provides tools and techniques to create effective and highly accurate customer response and routing workflows that can
-        benefit business organizations.</p>
+      <ul>
+        <li>GPU versus CPU-trained models: Since the deployment environment is CPU-based, the model export (.pkl) file needed to be trained on a CPU or with special instructions to ensure format compatibility.</li>
+
+        <li>PyTorch versus Tensorflow models: Most environments that we tried preferred Tensorflow models. There seems to be increasing support for PyTorch-based deployments but the majority of services favored Tensorflow during our period of research.</li>
+      </ul>
+
+      <p>We ultimately deployed a PyTorch-based (Fast.ai) model and had success using the Google App Engine Flexible environment.</p>
+
+      <a name="deploy_app">
+      <h5>Application Architecture</h5>
+      <p>The HTML form uses JavaScript to send the input text string (as a POST request) to a route (/create-entry) defined within our application. The handler function then performs an intent classification prediction of the message against our custom-trained model (which is read into the application as a .pkl file). The function then returns the output class prediction (via JSON) and renders the response in real-time to the user interface.</p>
+
+      <a name="deploy_env">
+      <h5>Google App Engine (Flexible)</h5>
+      <p>Our <a href="https://chatbotfastai.appspot.com" target="_blank">demo</a> using our custom PyTorch-based Fast.ai model is hosted on Google App Engine Flexible environment using a Python-based Starlette.io application. The Flexible environment provides support for the Fast.ai and PyTorch libraries without any special configuration, although it is a paid environment.</p>
+
+      <h5>Google App Engine (Standard)</h5>
+      <p>The Standard environment supports scikit-learn and Tensorflow model formats without any special configuration. Our <a href="/iris">initial version</a> of the user interface implements a scikit-learn model using Flask.</p>
+
+      <a name="deploy_code">
+      <h5>Code and assets</h5>
+      <ul>
+        <li>Our <a href="https://github.com/acary/chatbot-fastai" target="_blank"> demo</a> (Fast.ai/PyTorch) code</li>
+      </ul>
     </div><!-- /.media_list -->
 
   </div><!-- /.blog-main -->
@@ -26,9 +47,10 @@
     <div class="sidebar-module">
       <h4>Section</h4>
       <ol class="list-unstyled">
-        <li><a href="#">Data set</a></li>
-        <li><a href="#">Data preparation</a></li>
-        <li><a href="#">Results</a></li>
+        <li><a href="#deploy_challenges">Challenges</a></li>
+        <li><a href="#deploy_app">Application</a></li>
+        <li><a href="#deploy_env">Environment</a></li>
+        <li><a href="#deploy_code">Code</a></li>
       </ol>
     </div>
     <div class="sidebar-module">
