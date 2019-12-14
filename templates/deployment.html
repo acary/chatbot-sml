@@ -15,6 +15,8 @@
         <li>GPU versus CPU-trained models: Since the deployment environment is CPU-based, the model export (.pkl) file needed to be trained on a CPU or with special instructions to ensure format compatibility.</li>
 
         <li>PyTorch versus Tensorflow models: Most environments that we tried preferred Tensorflow models. There seems to be increasing support for PyTorch-based deployments but the majority of services favored Tensorflow during our period of research.</li>
+
+        <li>Production systems should run the same versions of Fast.ai and PyTorch as the system the model was trained on.</li>
       </ul>
 
       <p>We ultimately deployed a PyTorch-based (Fast.ai) model and had success using the Google App Engine Flexible environment.</p>
@@ -28,7 +30,11 @@
       <p>Our <a href="https://chatbotfastai.appspot.com" target="_blank">demo</a> using our custom PyTorch-based Fast.ai model is hosted on Google App Engine Flexible environment using a Python-based Starlette.io application. The Flexible environment provides support for the Fast.ai and PyTorch libraries without any special configuration, although it is a paid environment.</p>
 
       <h5>Google App Engine (Standard)</h5>
-      <p>The Standard environment supports scikit-learn and Tensorflow model formats without any special configuration. Our <a href="/iris">initial version</a> of the user interface implements a scikit-learn model using Flask.</p>
+      <p>The Standard environment supports scikit-learn and Tensorflow model formats without any special configuration. Our <a href="/iris">initial version</a> of the user interface implements a the Iris prediction model with a Python Flask application.</p>
+
+      <a name="observations">
+      <h5>Observations</h5>
+      <p>Google App Engine Flexible provided the most accommodating infrastructure for our Fast.ai/PyTorch model. Being a paid service, our Chatbot used resources amounting to around $3.63 per day.</p>
 
       <a name="deploy_code">
       <h5>Code and assets</h5>
@@ -50,6 +56,7 @@
         <li><a href="#deploy_challenges">Challenges</a></li>
         <li><a href="#deploy_app">Application</a></li>
         <li><a href="#deploy_env">Environment</a></li>
+        <li><a href="#observations">Observations</a></li>
         <li><a href="#deploy_code">Code</a></li>
       </ol>
     </div>
