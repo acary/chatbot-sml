@@ -48,14 +48,12 @@
         <h3 id="bert-data-preprocessing">Data Pre-processing</h3>
         <p>We have extracted the banking domain related data for our intent classification task from the dataset mentioned in this paper - <a href="https://arxiv.org/pdf/1909.02027.pdf" target="_blank">An Evaluation Dataset for Intent Classification and Out-of-Scope Prediction</a>. This dataset contains 150 intents ranging across various domains, each intent consists of 100 training records, 20 validation records and 30 test records, all present in a single csv file. From this we used (data_pre_processing.ipynb) to extract the banking related intents into train.csv, val.csv and test.csv files. We also provided numeric coding mapping for each of the intents which is required for the BERT model.</p>
 
-        <h3 id="bert-model-training">Training</h3>
+        <h3 id="bert-model-training">Training and Tuning</h3>
         <p>For training the BERT model, we extracted 10 intents from the pre-processed dataset with each intent containing 100 records. The train.csv file has two columns viz. “text” column containing the text that need to be classified and “labels” column containing the numbers (0-9) that corresponds to each of the intents that text belongs as shown in the screenshot below;</p>
         <div class="text-center">
         <img src="{{ url_for('static', filename='img/BERT_training_dataset.jpg')}}" alt="BERT training dataset">
         </div>
         <br>
-
-        <h3 id="bert-model-tuning">Tuning</h3>
         <p>We used a max sequence length of 128 for the input text with a training batch size of 5 and 4 epochs.</p>
         <div class="text-center">
         <img src="{{ url_for('static', filename='img/BERT_training_tuning.jpg')}}" alt="BERT tuning">
@@ -92,8 +90,7 @@
         <li><a href="#bert-architecture">Architecture</a></li>
         <li><a href="#bert-approach">Our approach</a></li>
         <li><a href="#bert-data-preprocessing">Data Pre-processing</a></li>
-        <li><a href="#bert-model-training">Training</a></li>
-        <li><a href="#bert-model-tuning">Tuning</a></li>
+        <li><a href="#bert-model-training">Training & Tuning</a></li>
         <li><a href="#bert-results">Results</a></li>
       </ol>
     </div>
