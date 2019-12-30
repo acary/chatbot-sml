@@ -8,7 +8,7 @@
 
       <p>We used Python-based application frameworks (Starlette and Flask) with a Bootstrap frontend to implement the chatbot user interface. Our <a href="https://chatbotfastai.appspot.com" target="_blank">demo</a> serves a Fast.ai/PyTorch model using the Starlette.io framework on the Google App Engine - Flexible infrastructure. Our <a href="/iris">initial version</a> serves a pre-trained Scikit-Learn model using the Flask framework (and also hosts this blog).</p>
 
-      <a name="deploy_challenges">
+      <a name="deploy_challenges"></a>
       <p>We found interesting challenges with:</p>
 
       <ul>
@@ -21,22 +21,22 @@
 
       <p>We ultimately deployed a PyTorch-based (Fast.ai) model and had success using the Google App Engine Flexible environment.</p>
 
-      <a name="deploy_app">
+      <a name="deploy_app"></a>
       <h5>Application Architecture</h5>
       <p>The HTML form uses JavaScript to send the input text string (as a POST request) to a route (/create-entry) defined within our application. The handler function then performs an intent classification prediction of the message against our custom-trained model (which is read into the application as a .pkl file). The function then returns the output class prediction (via JSON) and renders the response in real-time to the user interface.</p>
 
-      <a name="deploy_env">
+      <a name="deploy_env"></a>
       <h5>Google App Engine (Flexible)</h5>
       <p>Our <a href="https://chatbotfastai.appspot.com" target="_blank">demo</a> using our custom PyTorch-based Fast.ai model is hosted on Google App Engine Flexible environment using a Python-based Starlette.io application. The Flexible environment provides support for the Fast.ai and PyTorch libraries without any special configuration, although it is a paid environment.</p>
 
       <h5>Google App Engine (Standard)</h5>
       <p>The Standard environment supports scikit-learn and Tensorflow model formats without any special configuration. Our <a href="/iris">initial version</a> of the user interface implements a the Iris prediction model with a Python Flask application.</p>
 
-      <a name="observations">
+      <a name="observations"></a>
       <h5>Observations</h5>
       <p>Google App Engine Flexible provided the most accommodating infrastructure for our Fast.ai/PyTorch model. Being a paid service, our Chatbot used resources amounting to around $3.63 per day.</p>
 
-      <a name="deploy_code">
+      <a name="deploy_code"></a>
       <h5>Code and assets</h5>
       <ul>
         <li>Our <a href="https://github.com/acary/chatbot-fastai" target="_blank"> demo</a> (Fast.ai/PyTorch) code</li>

@@ -19,12 +19,12 @@ body {
   margin-bottom: 20px;
 }
 
-.media_list {
-  max-width: 80px;
+.nav-bar, a:hover {
+  color: #0074D9 !important;
 }
 
-h1, h2, h3, h4, h5, h6 {
- font-family: 'Crimson Text', serif;
+.media_list {
+  max-width: 80px;
 }
 
 input,
